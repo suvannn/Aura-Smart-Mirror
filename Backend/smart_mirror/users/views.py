@@ -1,10 +1,11 @@
+import os
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib import messages
-from smart_mirror.settings import MEDIA_URL, TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_WHATSAPP_NUMBER, YOUR_WHATSAPP_NUMBER, NGROK_URL
+from django.conf import settings
 from users.models import Profile
 import random
 from django.core.mail import send_mail
@@ -211,7 +212,7 @@ def request_otp(request):
             send_mail(
                 'Your Password Reset OTP',
                 f'Your OTP is: {otp}',
-                'your_email@example.com',  # Use your sender email
+                settings.DEFAULT_FROM_EMAIL,  # Use your sender email
                 [email],
                 fail_silently=False,
             )
@@ -246,7 +247,7 @@ def reset_password(request):
 def get_user_location(request):
     ip = request.META.get('REMOTE_ADDR', '103.87.197.51')
     try:
-        response = requests.get(f'https://ipinfo.io/{ip}?token=ca7bf6e0463fc8')
+        response = requests.get(f'https://ipinfo.io/{ip}?token=os.getenv('IPINFO_TOKEN')')
         data = response.json()
         city = data.get('city', 'Kathmandu')
         return city
@@ -254,7 +255,7 @@ def get_user_location(request):
         return 'Kathmandu'
 
 def get_weather(city):
-    api_key = '1a29cd579ef841c178fde367966796d2'
+    api_key = os.getenv('OPENWEATHER_API_KEY')
     url = f'https://api.openweathermap.org/data/2.5/weather?q={city}&appid={api_key}&units=metric'
     response = requests.get(url)
     data = response.json()
@@ -265,7 +266,7 @@ def get_weather(city):
     return 'Weather data unavailable'
 
 def get_news():
-    api_key = 'c572d7a5766442ad9a8c07a94e758173'
+    api_key = os.getenv('NEWS_API_KEY')
     url = f'https://newsapi.org/v2/top-headlines?country=us&apiKey={api_key}'
     response = requests.get(url)
     data = response.json()
@@ -374,7 +375,7 @@ def get_weather_icon(description):
         return 'fas fa-cloud'
 
 def generate_qr(request):
-    login_url = NGROK_URL  
+    login_url = settings.NGROK_URL  
     qr = qrcode.make(login_url)
     buffer = BytesIO()
     qr.save(buffer, format='PNG')
@@ -442,8 +443,8 @@ def qr_check_status(request):
     return JsonResponse({'authenticated': False})
 
 def send_whatsapp_alert(image_url):
-    account_sid = TWILIO_ACCOUNT_SID
-    auth_token = TWILIO_AUTH_TOKEN
+    account_sid = settings.TWILIO_ACCOUNT_SID
+    auth_token = settings.TWILIO_AUTH_TOKEN
     client = Client(account_sid, auth_token)
 
     now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -452,7 +453,7 @@ def send_whatsapp_alert(image_url):
     message = client.messages.create(
         from_='whatsapp:+14155238886',
         body=message_text,
-        to='whatsapp:+9779808253241',
+        to=settings.TWILIO_WHATSAPP_NUMBER,
         media_url=[image_url]
     )
 
@@ -466,7 +467,7 @@ def mirror_feed_api(request):
         emotion = request.POST.get('emotion')
         image = request.FILES.get('image')
 
-        public_url = NGROK_URL # e.g., https://yoursubdomain.loca.lt
+        public_url = settings.NGROK_URL # e.g., https://yoursubdomain.loca.lt
 
         image_url = None  # initialize safely
         if image:
