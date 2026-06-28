@@ -1,0 +1,36 @@
+# Virtual Environment
+venv/
+env/
+.venv/
+
+Lib/
+Library/
+Scripts/
+Include/
+pyvenv.cfg
+
+# Python
+__pycache__/
+*.pyc
+
+# Django
+*.sqlite3
+.env
+
+# AI
+*.h5
+*.pkl
+*.pt
+
+# Dataset
+Datasets/
+
+# Media
+media/
+
+# IDE
+.vscode/
+.idea/
+
+# Info
+share/

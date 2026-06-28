@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Mirror Preview</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"> <!-- Font Awesome for icons -->
+  <style>
+    body {
+      background-color: #000;
+      color: #fff;
+      height: 100vh;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .mirror-container {
+      width: 95%;
+      height: 90%;
+      background-color: rgba(255, 255, 255, 0.05);
+      border-radius: 20px;
+      padding: 30px;
+      gap: 30px;
+      backdrop-filter: blur(10px);
+    }
+
+    .top {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .bottom{
+      margin-top: -20px;
+    }
+
+    .left-section,
+    .right-section {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .right-section {
+      text-align: right;
+    }
+
+    .time {
+      font-size: 80px;
+      font-weight: bold;
+      text-align: left;
+      margin-bottom: 0px;
+    }
+
+    .greeting {
+      font-size: 80px;
+      font-weight: bold;
+      margin-bottom: 0px;
+    }
+
+    .day-date{
+      margin-top: -15px;
+      font-size: 25px;
+    }
+    .outfit {
+      font-size: 25px;
+    }
+
+    .content {
+      font-size: 48px;
+      line-height: 1.5;
+      width: 100%;
+    }
+
+    .news {
+      list-style-type: none;
+      padding: 0;
+      margin-top: 60px;
+    }
+
+    .news-list li {
+      margin-bottom: 10px;
+      font-size: 25px;
+      text-align: left;
+      list-style: none;
+      margin-left: -30px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="mirror-container" id="mirror-content">
+    <div class="top">
+      <!-- Left Side -->
+      <div class="left-section">
+
+        <div class="time" id="current-time">{{ current_time }}</div>
+        <div class="day-date" id="day-date">{{ current_day }} | {{ current_date }}</div>
+        <div class="content" id="weather-info">
+          <i class="{{ weather_icon }} weather-icon"></i> {{ weather_info }}
+      </div>
+        <div class="outfit">{{ outfit }}</div>
+
+      </div>
+      
+
+      <!-- Right Side -->
+      <div class="right-section">
+        <div class="greeting">{{ greeting }}</div>
+        <div class="content">{{ quote }}</div>
+      </div>
+    </div>
+    <div class="bottom">
+      <div class="news">
+        <h1>News</h1>
+        <ul class="news-list" id="news-list">
+          {% for headline in news_headlines %}
+            <li><i class="fas fa-newspaper"></i> {{ headline }}</li>
+          {% endfor %}
+        </ul>        
+      </div>
+    </div>
+  </div>
+
+  <!-- Auto Update Script -->
+  <script>
+    // Function to fetch and update time, date, and news
+    function updateTimeAndNews() {
+      fetch(window.location.href, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+        .then(response => response.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(html, 'text/html');
+          document.getElementById('current-time').innerHTML = doc.getElementById('current-time').innerHTML;
+          document.getElementById('day-date').innerHTML = doc.getElementById('day-date').innerHTML;
+          document.getElementById('news-list').innerHTML = doc.getElementById('news-list').innerHTML;
+
+          // ✨ NEW: update greeting and quote
+          document.querySelector('.greeting').innerHTML = doc.querySelector('.greeting').innerHTML;
+          document.querySelectorAll('.content')[1].innerHTML = doc.querySelectorAll('.content')[1].innerHTML;
+        });
+    }
+
+    function updateGreetingAndContent() {
+      fetch(window.location.href, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+        .then(response => response.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(html, 'text/html');
+
+          // ✨ NEW: update greeting and quote
+          document.querySelector('.greeting').innerHTML = doc.querySelector('.greeting').innerHTML;
+          document.querySelectorAll('.content')[1].innerHTML = doc.querySelectorAll('.content')[1].innerHTML;
+        });
+    }
+
+
+    // Function to fetch and update weather only
+    function updateWeather() {
+      fetch(window.location.href, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+        .then(response => response.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(html, 'text/html');
+          document.getElementById('weather-info').innerHTML = doc.getElementById('weather-info').innerHTML;
+        });
+    }
+
+    // Update time and news every 1 minute
+    setInterval(updateTimeAndNews, 60000);
+
+    // Update weather every 15 minutes
+    setInterval(updateWeather, 900000);
+
+    
+    setInterval(updateGreetingAndContent, 10000);
+  </script>
+
+</body>
+
+</html>

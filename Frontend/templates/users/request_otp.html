@@ -1,0 +1,97 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>OTP Form</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4, #a18cd1, #fbc2eb);
+            font-family: 'Poppins', sans-serif;
+            position: relative;
+        }
+
+        .form-container {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            backdrop-filter: blur(10px);
+            width: 100%;
+            max-width: 380px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .logo {
+            width: 220px;
+            position: absolute;
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        h1 {
+            font-size: 30px;
+            font-weight: bold;
+            color: #ffffff;
+            margin-bottom: 15px;
+            margin-top: -5px;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        input[type="email"] {
+            width: 92%;
+            padding: 12px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        button {
+            background: linear-gradient(135deg, #a18cd1, #fbc2eb);
+            color: white;
+            border: none;
+            width: 98%;
+            padding: 12px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, #fbc2eb, #a18cd1);
+        }
+    </style>
+</head>
+<body>
+
+    <img src="{% static 'images/AURA_LOGO.png' %}" alt="Logo" class="logo"> <!-- Ensure correct path -->
+
+    <div class="form-container">
+        <h1>Request OTP</h1>
+        <form method="POST">
+            {% csrf_token %}
+            <input type="email" name="email" placeholder="Enter your registered email" required>
+            <button type="submit">Send OTP</button>
+            {% for message in messages %}<p style="color:whitesmoke;"></p>
+            <p>{{ message }}</p>
+            {% endfor %}
+        </form>
+    </div>
+
+</body>
+</html>

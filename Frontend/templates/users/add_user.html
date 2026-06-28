@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <title>Add User</title>
+    <style>
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4, #a18cd1, #fbc2eb);
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            padding: 30px 0;
+        }
+
+        .logo {
+            width: 170px;
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            filter: drop-shadow(0 0 5px rgba(0,0,0,0.2));
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+            padding: 30px;
+            max-width: 1200px; /* Increased width */
+            width: 95%;
+            margin: 70px auto 0; /* Added top margin to make room for logo */
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            margin-top: 110px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #fff;
+            font-size: 25px; /* Smaller font size */
+            font-weight: 700;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+            letter-spacing: 1px;
+            margin-top: 2px;
+            margin-bottom: 2px;
+        }
+
+        form {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 2px; /* Reduced gap */
+        }
+
+        .form-group {
+            flex: 0 0 calc(33.33% - 8px);
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 0;
+            padding: 0 4px;
+        }
+
+        .form-group.full-width {
+            flex: 0 0 100%;
+        }
+
+        .form-group.half-width {
+            flex: 0 0 50%;
+            padding: 0 4px;
+            display: flex;
+            flex-direction: column;
+         }
+
+         .form_location_phone {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px; /* adjust space between fields */
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .form_location_phone .form-group {
+            flex: 1 1 48%; /* 2 fields side-by-side */
+            display: flex;
+            flex-direction: column;
+        }
+
+
+        label {
+            margin-bottom: 5px; /* Reduced */
+            font-weight: 600;
+            color: #fff;
+            font-size: 14px; /* Smaller font */
+            letter-spacing: 0.5px;
+            text-shadow: 0 1px 1px rgba(0,0,0,0.1);
+        }
+
+        input {
+            padding: 12px 16px; /* Reduced padding */
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.7);
+            font-size: 14px; /* Smaller font */
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #a18cd1;
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .password-criteria {
+            font-size: 13px; /* Smaller font */
+            color: #fff;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            padding: 15px; /* Reduced padding */
+            margin-top: 3px; /* Reduced */
+        }
+
+        .password-criteria-title {
+            font-weight: 600;
+            margin-bottom: 8px; /* Reduced */
+            color: #fff;
+            font-size: 14px; /* Smaller font */
+        }
+
+        .password-criteria ul {
+            list-style: none;
+            padding-left: 5px;
+            margin-bottom: 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between; /* Evenly space criteria */
+        }
+
+        .password-criteria li {
+            margin-bottom: 6px; /* Reduced */
+            display: flex;
+            align-items: center;
+            flex: 0 0 24%; /* Equal width for all criteria (slightly less than 25% to account for gaps) */
+            padding-right: 5px;
+            font-size: 13px; /* Smaller font */
+        }
+
+        .password-criteria li::before {
+            content: "❌";
+            margin-right: 6px; /* Reduced */
+            color: #ff5252;
+            font-size: 14px; /* Smaller font */
+        }
+
+        .password-criteria li.valid::before {
+            content: "✅";
+            color: #4CAF50;
+        }
+        .error {
+            color: #ff5252;
+            font-size: 12px; /* Smaller font */
+            margin-top: 5px; /* Reduced */
+            background: rgba(255, 82, 82, 0.1);
+            padding: 4px 8px; /* Reduced */
+            border-radius: 8px;
+            font-weight: 500;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px; /* Reduced padding */
+            background: linear-gradient(135deg, #a18cd1, #fbc2eb);
+            border: none;
+            color: white;
+            font-size: 16px; /* Smaller font */
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            letter-spacing: 0.8px;
+            margin-top: 8px; /* Reduced */
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, #fbc2eb, #a18cd1);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        a.back-link {
+            display: block;
+            text-align: center;
+            margin-top: 15px; /* Reduced */
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: 0.3s;
+            text-shadow: 0 1px 1px rgba(0,0,0,0.1);
+            padding: 5px;
+            font-size: 14px; /* Smaller font */
+        }
+
+        a.back-link:hover {
+            text-decoration: underline;
+            transform: translateY(-2px);
+        }
+
+        .notification {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            padding: 12px 20px; /* Reduced */
+            border-radius: 12px;
+            font-weight: 500;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            max-width: 350px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s ease;
+            font-size: 14px; /* Smaller font */
+        }
+
+        .notification.error {
+            background: rgba(255, 82, 82, 0.9);
+            color: white;
+        }
+
+        .notification.success {
+            background: rgba(76, 175, 80, 0.9);
+            color: white;
+        }
+
+        .alert-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1050;
+            width: auto;
+            max-width: 350px;
+            pointer-events: none;
+        }
+
+        .alert {
+            background: linear-gradient(135deg, #fbc2eb, #a18cd1);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+            font-weight: 500;
+            padding: 15px 20px; /* Reduced */
+            font-size: 14px; /* Smaller font */
+            pointer-events: auto;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .alert .btn-close {
+            color: white;
+            opacity: 1;
+            background: none;
+            box-shadow: none;
+            outline: none;
+            border: none;
+            cursor: pointer;
+            font-size: 18px; /* Smaller font */
+            padding: 0 0 0 15px;
+        }
+
+        .form-header {
+            width: 100%;
+            text-align: center;
+            position: relative;
+            padding-bottom: 12px; /* Reduced */
+            margin-bottom: 15px; /* Reduced */
+        }
+
+        .form-header:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(to right, rgba(255,255,255,0.5), rgba(255,255,255,0.9), rgba(255,255,255,0.5));
+            border-radius: 2px;
+        }
+
+        @media (max-width: 992px) {
+            .form-group {
+                flex: 0 0 calc(50% - 5px); /* Adjusted */
+            }
+            
+            .form-group.two-thirds {
+                flex: 0 0 100%;
+            }
+            
+            .password-criteria li {
+                flex: 0 0 50%; /* Two per row on medium screens */
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px 15px; /* Reduced */
+                width: 95%;
+                margin-top: 60px; /* Adjusted for logo */
+            }
+
+            .form-group {
+                flex: 0 0 100%;
+            }
+
+            h2 {
+                font-size: 24px; /* Smaller */
+            }
+
+            .logo {
+                width: 100px; /* Smaller */
+                top: 15px;
+            }
+
+            button {
+                padding: 12px; /* Reduced */
+                font-size: 15px; /* Smaller */
+            }
+            
+            .password-criteria li {
+                flex: 0 0 100%; /* One per row on small screens */
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <img src="{% static 'images/AURA_LOGO.png' %}" alt="Logo" class="logo">
+    
+    <!-- Alert Messages -->
+    <div class="alert-container">
+        {% for message in messages %}
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="container">
+        <div class="form-header">
+            <h2>Add New User</h2>
+        </div>
+        
+        <form method="POST" id="addUserForm">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" placeholder="Enter username" required>
+            </div>
+
+            <div class="form-group">
+                <label for="first_name">First Name:</label>
+                <input type="text" id="first_name" name="first_name" pattern="[A-Za-z]+" title="Only alphabets allowed." placeholder="Enter first name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="last_name">Last Name:</label>
+                <input type="text" id="last_name" name="last_name" pattern="[A-Za-z]+" title="Only alphabets allowed." placeholder="Enter last name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" placeholder="Enter email address" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" placeholder="Enter password" required>
+            </div>
+
+            <div class="form-group">
+                <label for="repassword">Re-type Password:</label>
+                <input type="password" id="repassword" name="repassword" placeholder="Confirm password" required
+                       oninput="this.setCustomValidity(this.value != document.getElementById('password').value ? 'Passwords do not match.' : '')">
+            </div>
+
+            <div class="form-group full-width password-criteria">
+                <div class="password-criteria-title">Password Requirements:</div>
+                <ul>
+                    <li id="uppercase">At least one uppercase letter</li>
+                    <li id="number">At least one number</li>
+                    <li id="special">At least one special character (@$!%*?&)</li>
+                    <li id="length">8-15 characters long</li>
+                </ul>
+            </div>
+            <div class="form_location_phone">
+                <div class="form-group half-width">
+                    <label for="location">Location:</label>
+                    <input type="text" id="location" name="location" placeholder="Enter location" required>
+                </div>
+                
+                <div class="form-group half-width">
+                    <label for="phone_number">Phone Number:</label>
+                    <input type="text" id="phone_number" name="phone_number" placeholder="Enter phone number" required minlength="10" title="Phone Number must be at least 10 characters long.">
+                </div>        
+            </div>
+            
+
+            <div class="form-group full-width">
+                <button type="submit">Add User</button>
+            </div>
+        </form>
+
+        <a href="{% url 'dashboard' %}" class="back-link">Back to Dashboard</a>
+    </div>
+
+    <script>
+        const passwordInput = document.getElementById('password');
+        const uppercase = document.getElementById('uppercase');
+        const number = document.getElementById('number');
+        const special = document.getElementById('special');
+        const length = document.getElementById('length');
+
+        const usernameInput = document.getElementById('username');
+        const emailInput = document.getElementById('email');
+        const usernameError = document.getElementById('usernameError');
+        const emailError = document.getElementById('emailError');
+
+        // Password validation
+        passwordInput.addEventListener('input', function () {
+            const value = passwordInput.value;
+            /[A-Z]/.test(value) ? uppercase.classList.add('valid') : uppercase.classList.remove('valid');
+            /\d/.test(value) ? number.classList.add('valid') : number.classList.remove('valid');
+            /[@$!%*?&]/.test(value) ? special.classList.add('valid') : special.classList.remove('valid');
+            (value.length >= 8 && value.length <= 15) ? length.classList.add('valid') : length.classList.remove('valid');
+        });
+
+        // Username check
+        usernameInput.addEventListener('blur', function () {
+            const username = usernameInput.value;
+            if (username) {
+                fetch(`/check-username/?username=${username}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        usernameError.textContent = data.exists ? "Username already exists." : "";
+                        if (data.exists) {
+                            usernameInput.classList.add('error-input');
+                            
+                            // Create notification for username
+                            showNotification("Username is not available!", "error");
+                        } else {
+                            usernameInput.classList.remove('error-input');
+                        }
+                    });
+            }
+        });
+
+        // Email check
+        emailInput.addEventListener('blur', function () {
+            const email = emailInput.value;
+            if (email) {
+                fetch(`/check-email/?email=${email}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        emailError.textContent = data.exists ? "Email already exists." : "";
+                        if (data.exists) {
+                            emailInput.classList.add('error-input');
+                        } else {
+                            emailInput.classList.remove('error-input');
+                        }
+                    });
+            }
+        });
+
+        // Show notification function
+        function showNotification(message, type = 'info') {
+            // Remove any existing notifications
+            const existingNotification = document.querySelector('.notification');
+            if (existingNotification) {
+                existingNotification.remove();
+            }
+            
+            // Create new notification
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                ${message}
+                <span onclick="this.parentElement.remove()" style="cursor:pointer;margin-left:10px;">✕</span>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Auto remove after 3 seconds
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.remove();
+                }
+            }, 3000);
+        }
+
+        // Final validation on submit
+        document.getElementById('addUserForm').addEventListener('submit', function (e) {
+            if (!(uppercase.classList.contains('valid') &&
+                number.classList.contains('valid') &&
+                special.classList.contains('valid') &&
+                length.classList.contains('valid'))) {
+                e.preventDefault();
+                showNotification("Please fulfill all password requirements.", "error");
+            }
+
+            if (usernameError.textContent || emailError.textContent) {
+                e.preventDefault();
+                showNotification("Fix the username or email errors before submitting.", "error");
+            }
+        });
+        
+        // Auto-hide alerts after 3 seconds
+        document.addEventListener("DOMContentLoaded", function () {
+            setTimeout(function () {
+                let alerts = document.querySelectorAll(".alert");
+                alerts.forEach(alert => {
+                    let bsAlert = new bootstrap.Alert(alert);
+                    bsAlert.close();
+                });
+            }, 3000);
+        });
+    </script>
+</body>
+</html>

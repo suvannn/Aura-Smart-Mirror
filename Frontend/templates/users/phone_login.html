@@ -1,0 +1,152 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login to complete QR Authentication</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding: 16px;
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4, #a18cd1, #fbc2eb);
+        }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.25);
+            padding: 24px 18px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            backdrop-filter: blur(10px);
+            width: 100%;
+            max-width: 360px;
+        }
+
+        .logo {
+            width: 160px;
+            margin-bottom: 5px;
+        }
+
+        h2 {
+            font-size: 22px;
+            color: #fff;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 14px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .password-container {
+            position: relative;
+            width: 100%;
+        }
+
+        .password-container input {
+            width: 100%;
+            padding-right: 40px;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: 18px;
+            user-select: none;
+            color: #333;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #a18cd1, #fbc2eb);
+            border: none;
+            color: white;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, #fbc2eb, #a18cd1);
+        }
+
+        p {
+            color: red;
+            font-size: 14px;
+            margin-top: 8px;
+        }
+
+        @media (max-width: 400px) {
+            .login-container {
+                padding: 20px 14px;
+            }
+
+            .logo {
+                width: 140px;
+            }
+
+            h2 {
+                font-size: 18px;
+            }
+
+            input, button {
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <img src="{% static 'images/AURA_LOGO.png' %}" alt="Logo" class="logo">
+        <h2>Login to complete QR Authentication</h2>
+        {% if error %}<p>{{ error }}</p>{% endif %}
+        <form method="POST" action="{% url 'phone_login_complete' %}">
+            {% csrf_token %}
+            <input type="hidden" name="token" value="{{ token }}">
+            <input type="text" name="username" placeholder="Username" required>
+            <div class="password-container">
+                <input type="password" id="password" name="password" placeholder="Password" required>
+                <span class="toggle-password" onclick="togglePassword()">🙈</span>
+            </div>
+            <button type="submit">Login</button>
+        </form>
+    </div>
+
+    <script>
+        function togglePassword() {
+            const passwordField = document.getElementById("password");
+            const toggleIcon = document.querySelector(".toggle-password");
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+                toggleIcon.textContent = "👁️";
+            } else {
+                passwordField.type = "password";
+                toggleIcon.textContent = "🙈";
+            }
+        }
+    </script>
+</body>
+</html>

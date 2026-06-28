@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <title>Update User</title>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4, #a18cd1, #fbc2eb);
+      font-family: 'Poppins', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      padding: 20px 0;
+    }
+
+    .logo {
+      width: 150px;
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      filter: drop-shadow(0 0 5px rgba(0,0,0,0.2));
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(15px);
+      border-radius: 20px;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+      padding: 20px;
+      max-width: 1000px;
+      width: 95%;
+      margin: 50px auto 0;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      margin-top: 80px;
+    }
+
+    h2 {
+      text-align: center;
+      color: #fff;
+      font-size: 22px;
+      font-weight: 700;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+      letter-spacing: 1px;
+      margin-top: 0;
+      margin-bottom: 10px;
+    }
+
+    form {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 0;
+      row-gap: 0;
+    }
+
+    .form-group {
+      flex: 0 0 calc(33.33% - 8px);
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 0;
+      padding: 0 4px;
+    }
+
+    .form-group.full-width {
+      flex: 0 0 100%;
+      padding: 0 4px;
+    }
+
+    .form-group.half-width {
+      flex: 0 0 50%;
+      padding: 0 4px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      margin-bottom: 2px;
+      font-weight: 600;
+      color: #fff;
+      font-size: 12px;
+      letter-spacing: 0.5px;
+      text-shadow: 0 1px 1px rgba(0,0,0,0.1);
+    }
+
+    input {
+      padding: 8px 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      background: rgba(255, 255, 255, 0.7);
+      font-size: 13px;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      width: 100%;
+      margin: 0 0 8px 0;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #a18cd1;
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    hr {
+      border-color: rgba(255, 255, 255, 0.3);
+      margin: 10px 0;
+      width: 100%;
+    }
+
+    .password-criteria {
+      font-size: 12px;
+      color: #fff;
+      background: rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+      padding: 20px;
+      margin: 5px 4px 10px 4px;
+      width: calc(100% - 8px);
+    }
+
+    .password-criteria-title {
+      font-weight: 600;
+      margin-bottom: 5px;
+      color: #fff;
+      font-size: 12px;
+      margin-top: 10px;
+      margin-left: 10px;
+    }
+
+    .password-criteria ul {
+      list-style: none;
+      padding-left: 5px;
+      margin-left: 10px;
+      margin-bottom: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+
+    .password-criteria li {
+      margin-bottom: 2px;
+      /* display: flex; */
+      align-items: center;
+      flex: 0 0 48%;
+      padding-right: 5px;
+      font-size: 11px;
+    }
+
+    .password-criteria li::before {
+      content: "❌";
+      margin-right: 4px;
+      color: #ff5252;
+      font-size: 11px;
+    }
+
+    .password-criteria li.valid::before {
+      content: "✅";
+      color: #4CAF50;
+    }
+
+    .error {
+      color: #ff5252;
+      font-size: 11px;
+      margin-top: 2px;
+      background: rgba(255, 82, 82, 0.1);
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-weight: 500;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background: linear-gradient(135deg, #a18cd1, #fbc2eb);
+      border: none;
+      color: white;
+      font-size: 14px;
+      font-weight: 600;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      letter-spacing: 0.8px;
+      margin-top: 5px;
+    }
+
+    button:hover {
+      background: linear-gradient(135deg, #fbc2eb, #a18cd1);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    a.back-link {
+      display: block;
+      text-align: center;
+      margin-top: 10px;
+      color: #fff;
+      text-decoration: none;
+      font-weight: 500;
+      transition: 0.3s;
+      text-shadow: 0 1px 1px rgba(0,0,0,0.1);
+      padding: 3px;
+      font-size: 12px;
+    }
+
+    a.back-link:hover {
+      text-decoration: underline;
+      transform: translateY(-2px);
+    }
+
+    .alert-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1050;
+      width: auto;
+      max-width: 350px;
+      pointer-events: none;
+    }
+
+    .alert {
+      background: linear-gradient(135deg, #fbc2eb, #a18cd1);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+      font-weight: 500;
+      padding: 10px 15px;
+      font-size: 12px;
+      pointer-events: auto;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .form-header {
+      width: 100%;
+      text-align: center;
+      position: relative;
+      padding-bottom: 10px;
+      margin-bottom: 10px;
+    }
+
+    .form-header:after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 2px;
+      background: linear-gradient(to right, rgba(255,255,255,0.5), rgba(255,255,255,0.9), rgba(255,255,255,0.5));
+      border-radius: 2px;
+    }
+
+    @media (max-width: 992px) {
+      .form-group {
+        flex: 0 0 calc(50% - 8px);
+      }
+      
+      .password-criteria li {
+        flex: 0 0 50%;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 15px;
+        width: 95%;
+        margin-top: 60px;
+      }
+
+      .form-group {
+        flex: 0 0 100%;
+      }
+
+      h2 {
+        font-size: 20px;
+      }
+
+      .logo {
+        width: 100px;
+        top: 15px;
+      }
+
+      button {
+        padding: 10px;
+        font-size: 14px;
+      }
+      
+      .password-criteria li {
+        flex: 0 0 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <img src="{% static 'images/AURA_LOGO.png' %}" alt="Logo" class="logo">
+  
+  <!-- Alert Messages -->
+  <div class="alert-container">
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      {{ message }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+    {% endif %}
+  </div>
+
+  <div class="container">
+    <div class="form-header">
+      <h2>Update User</h2>
+    </div>
+
+    <form method="POST" id="updateUserForm">
+      {% csrf_token %}
+
+      <div class="form-group">
+        <label for="username">Username:</label>
+        <input type="text" name="username" id="username" value="{{ user.username }}" required onkeyup="checkUsernameAvailability()">
+      </div>
+
+      <div class="form-group">
+        <label for="first_name">First Name:</label>
+        <input type="text" name="first_name" id="first_name" value="{{ user.first_name }}" required pattern="[A-Za-z]+" title="Only alphabets allowed.">
+      </div>
+
+      <div class="form-group">
+        <label for="last_name">Last Name:</label>
+        <input type="text" name="last_name" id="last_name" value="{{ user.last_name }}" required pattern="[A-Za-z]+" title="Only alphabets allowed.">
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" name="email" id="email" value="{{ user.email }}" required>
+      </div>
+
+      <div class="form-group">
+        <label for="location">Location:</label>
+        <input type="text" name="location" id="location" value="{{ user.profile.location }}" required minlength="3" title="Location must be at least 3 characters long.">
+      </div>
+
+      <div class="form-group">
+        <label for="location">Phone Number:</label>
+        <input type="text" name="phone_number" id="location" value="{{ user.profile.phone_number }}" required minlength="10" title="Phone Number must be at least 10 characters long.">
+      </div>
+
+      <div class="form-group full-width">
+        <label for="current_password">Current Password (Required to change password):</label>
+        <input type="password" name="current_password" id="current_password">
+      </div>
+
+      <div class="form-group half-width">
+        <label for="password">New Password:</label>
+        <input type="password" id="password" name="password" pattern="(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&_]{8,15}">
+      </div>
+
+      <div class="form-group half-width">
+        <label for="repassword">Re-type New Password:</label>
+        <input type="password" id="repassword" name="repassword" oninput="this.setCustomValidity(this.value !== document.getElementById('password').value ? 'Passwords do not match.' : '')">
+      </div>
+
+      <div class="form-group full-width password-criteria">
+        <div class="password-criteria-title">Password Requirements:</div>
+        <ul>
+          <li id="uppercase">At least one uppercase letter</li>
+          <li id="number">At least one number</li>
+          <li id="special">At least one special character (@$!%*?&)</li>
+          <li id="length">8-15 characters long</li>
+        </ul>
+      </div>
+
+      <div class="form-group full-width">
+        <button type="submit">Update User</button>
+      </div>
+    </form>
+
+    <a href="{% url 'dashboard' %}" class="back-link">Back to Dashboard</a>
+  </div>
+
+  <script>
+    function checkUsernameAvailability() {
+      const username = document.getElementById('username').value;
+      const errorDiv = document.getElementById('username-error');
+
+      if (username.trim() === '') {
+        errorDiv.innerText = '';
+        return;
+      }
+
+      fetch(`/check-username/?username=${username}`)
+        .then(response => response.json())
+        .then(data => {
+          if (data.exists) {
+            errorDiv.innerText = 'Username is not available!';
+          } else {
+            errorDiv.innerText = '';
+          }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+
+    // Password live validation
+    const passwordInput = document.getElementById('password');
+    const uppercase = document.getElementById('uppercase');
+    const number = document.getElementById('number');
+    const special = document.getElementById('special');
+    const length = document.getElementById('length');
+
+    passwordInput.addEventListener('input', function () {
+      const value = passwordInput.value;
+
+      // Uppercase
+      if (/[A-Z]/.test(value)) {
+        uppercase.classList.add('valid');
+      } else {
+        uppercase.classList.remove('valid');
+      }
+
+      // Number
+      if (/\d/.test(value)) {
+        number.classList.add('valid');
+      } else {
+        number.classList.remove('valid');
+      }
+
+      // Special Character
+      if (/[@$!%*?&]/.test(value)) {
+        special.classList.add('valid');
+      } else {
+        special.classList.remove('valid');
+      }
+
+      // Length
+      if (value.length >= 8 && value.length <= 15) {
+        length.classList.add('valid');
+      } else {
+        length.classList.remove('valid');
+      }
+    });
+
+    // Password validation on submit
+    document.getElementById('updateUserForm').addEventListener('submit', function (e) {
+      const password = document.getElementById('password').value;
+      const currentPassword = document.getElementById('current_password').value;
+
+      // If password change is attempted but current password is empty
+      if (password && !currentPassword) {
+        e.preventDefault();
+        showNotification("Please enter your current password to change the password.", "error");
+        return;
+      }
+    });
+
+    // Show notification function
+    function showNotification(message, type = 'info') {
+            // Remove any existing notifications
+            const existingNotification = document.querySelector('.notification');
+            if (existingNotification) {
+                existingNotification.remove();
+            }
+            
+            // Create new notification
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                ${message}
+                <span onclick="this.parentElement.remove()" style="cursor:pointer;margin-left:10px;">✕</span>
+            `;
+            
+            document.body.appendChild(notification);
+      
+      // Auto remove after 3 seconds
+      setTimeout(() => {
+        if (notification.parentElement) {
+          const bsAlert = new bootstrap.Alert(notification);
+          bsAlert.close();
+        }
+      }, 3000);
+    }
+
+    // Auto-hide alerts after 3 seconds
+    document.addEventListener("DOMContentLoaded", function () {
+      setTimeout(function () {
+        let alerts = document.querySelectorAll(".alert");
+        alerts.forEach(alert => {
+          let bsAlert = new bootstrap.Alert(alert);
+          bsAlert.close();
+        });
+      }, 3000);
+    });
+  </script>
+</body>
+</html>

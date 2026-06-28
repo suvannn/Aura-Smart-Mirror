@@ -1,0 +1,78 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>QR Code Login</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4, #a18cd1, #fbc2eb);
+            font-family: 'Poppins', sans-serif;
+            position: relative;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            backdrop-filter: blur(10px);
+            width: 100%;
+            max-width: 350px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        h2 {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ffffff;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        img {
+            width: 300px;
+            height: 300px;
+            margin-bottom: 15px;
+        }
+
+        p {
+            color: #ffffff;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Scan this QR Code</h2>
+        <img src="data:image/png;base64,{{ qr_image }}" alt="QR Code">
+        <p>Waiting for login...</p>
+    </div>
+
+    <script>
+        const token = '{{ token }}';
+        const interval = setInterval(() => {
+            fetch(`/qr-check-status/?token=${token}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.authenticated) {
+                    clearInterval(interval);
+                    window.location.href = '/mirror_preview/';
+                }
+            });
+        }, 3000);
+    </script>
+</body>
+</html>

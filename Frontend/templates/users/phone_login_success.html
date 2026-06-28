@@ -1,0 +1,92 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Successful</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding: 16px;
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4, #a18cd1, #fbc2eb);
+            font-family: 'Poppins', sans-serif;
+            position: relative;
+        }
+
+        .form-container {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            backdrop-filter: blur(10px);
+            width: 100%;
+            max-width: 360px;
+        }
+
+        .logo {
+            width: 180px;
+            position: absolute;
+            top: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        h1 {
+            font-size: 26px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 15px;
+            margin-top: 40px;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        p {
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 300;
+        }
+
+        @media (max-width: 400px) {
+            .form-container {
+                padding: 20px 16px;
+                max-width: 320px;
+            }
+
+            .logo {
+                width: 140px;
+                top: 20px;
+            }
+
+            h1 {
+                font-size: 22px;
+                margin-top: 30px;
+            }
+
+            p {
+                font-size: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <img src="{% static 'images/AURA_LOGO.png' %}" alt="Logo" class="logo">
+
+    <div class="form-container">
+        <h1>Login Successful!</h1>
+        <p>You can now switch to your PC.</p>
+    </div>
+
+</body>
+</html>
